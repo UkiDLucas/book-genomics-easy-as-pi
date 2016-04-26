@@ -29,6 +29,18 @@ If you are adding content, then feel free to add as much as you want, but expect
 First, I would recomment to spend couple of hours watching few YouTube videos on the subject, I have created a playlist specifically for Open Source:
 https://www.youtube.com/playlist?list=PLTDU7-XpBugwc9NNYO3rw7Ql1pY_oZE5d
 
+### What is Markdown?
+
+The syntax formatting using "Markdown" (*.md) files
+
+Please get familiar with basics of Markdown script:
+https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet
+
+### Text Editor
+
+You can use any text editor you like, but I would recommend WYSIWG tool like Typora.
+https://www.typora.io/ 
+
 ### Forking the project
 
 Once you watch the Open Source videos you should be able to 
@@ -65,14 +77,3 @@ example command line commit:
 
 7) Request Pull
 
-### What is Markdown?
-
-The syntax formatting using "Markdown" (*.md) files
-
-Please get familiar with basics of Markdown script:
-https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet
-
-### Text Editor
-
-You can use any text editor you like, but I would recommend WYSIWG tool like Typora.
-https://www.typora.io/ 
