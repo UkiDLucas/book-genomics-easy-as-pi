@@ -62,7 +62,7 @@ Once you watch the Open Source videos you should be able to
 3) Make changes in the browser, or
 
 4) Copy the project to your computer:
-git clone https://github.com/YOUR_ALIAS_HERE/genomics-easy-as-pi-book.git
+`git clone https://github.com/YOUR_ALIAS_HERE/genomics-easy-as-pi-book.git`
 
 5) Make changes to a file
 
