@@ -37,6 +37,13 @@ Once you watch the Open Source videos you should be able to
 
 2) Create a new "Branch" that describes specific changes you are making
 
+`genomics-easy-as-pi-book $ git branch`
+`add-gitignore`
+`master`
+`*modify-contributing-file`
+
+
+
 3) Make changes in the browser, or
 
 4) Copy the project to your computer:
@@ -47,15 +54,12 @@ git clone https://github.com/YOUR_ALIAS_HERE/genomics-easy-as-pi-book.git
 6) Commmit (you can use GitHub desktop)
 
 example command line commit:
-genomics-easy-as-pi-book $ git status
 
-	modified:   CONTRIBUTING.md
-
-genomics-easy-as-pi-book $ git add CONTRIBUTING.md
-
-genomics-easy-as-pi-book $ git commit -m "added majority of the new content to CONTRIBUTING.md"
-
-genomics-easy-as-pi-book  $ git push
+`genomics-easy-as-pi-book $ git status`
+`modified:   CONTRIBUTING.md`
+`genomics-easy-as-pi-book $ git add CONTRIBUTING.md`
+`genomics-easy-as-pi-book $ git commit -m "added majority of the new content to CONTRIBUTING.md"`
+`genomics-easy-as-pi-book  $ git push`
 
 
 
