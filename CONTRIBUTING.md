@@ -44,14 +44,20 @@ git clone https://github.com/YOUR_ALIAS_HERE/genomics-easy-as-pi-book.git
 
 5) Make changes to a file
 
-6) commmit (you can use GitHub desktop)
+6) Commmit (you can use GitHub desktop)
 
 example command line commit:
 genomics-easy-as-pi-book $ git status
 
 	modified:   CONTRIBUTING.md
 
-genomics-easy-as-pi-book $git add CONTRIBUTING.md
+genomics-easy-as-pi-book $ git add CONTRIBUTING.md
+
+genomics-easy-as-pi-book $ git commit -m "added majority of the new content to CONTRIBUTING.md"
+
+genomics-easy-as-pi-book  $ git push
+
+
 
 7) Request Pull
 
