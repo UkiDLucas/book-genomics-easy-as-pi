@@ -3,5 +3,5 @@ You can use a free command line utility to create epub documents from multiple M
 http://pandoc.org/epub.html
 
 So far we have this many:
-`$ pandoc chapter-blockchain.md chapter-final-word.md -o out.epub`
+`$ pandoc chapter-cover-page.md chapter-blockchain.md chapter-final-word.md -o out.epub`
 

@@ -1,0 +1,3 @@
+% Genomic - easy as Pi
+% DIY parallel cluster computers and blockchain in big data genetic research
+% Uki D. Lucas
