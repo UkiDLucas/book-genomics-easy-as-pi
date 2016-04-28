@@ -11,6 +11,10 @@ The book points out that recently there was a convergences to two, previously un
 
 I would love to see people contrubuting more information to the existing version and in the future create translations.
 
+### Why book content is in "en" folder?
+
+I have placed all English content in "en" folder so it is easy in the future to translate the text to other langauages, e.g. Spanish will have a copy in "es", Russian in "ru" and Polish in "pl" folder.
+
 ### You can be a co-author
 
 If you would like to contribute to the book please review [CONTRIBUTING.md file](https://github.com/UkiDLucas/genomics-easy-as-pi-book/blob/master/CONTRIBUTING.md). The most influencial contributors will be listed in begining of the book, in contributors' section.
