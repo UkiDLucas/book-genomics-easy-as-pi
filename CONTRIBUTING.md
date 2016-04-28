@@ -14,19 +14,20 @@ It is important to keep in mind some goals for this book:
 
 ### How much can I contribute?
 
+If you are adding new content, then feel free to add as much as you want, but expect that you will be asked to make edits and changes to your text before merging it to the book.
+
 If you are **changing existing text**, then very little, usually you should limit your edits to:
 
 - updating facts (numbers)
 - fixing spelling
 - improving sentence clarity and structure
 
-If you are adding content, then feel free to add as much as you want, but expect that you will be asked to make edits and changes to your text before merging it to the book.
-
 ## How do I contribute?
 
 ### Understanding GitHub Open Source
 
-First, I would recomment to spend couple of hours watching few YouTube videos on the subject, I have created a playlist specifically for Open Source:
+First, I would recomment that you spend couple of hours watching few YouTube videos on the general GitHub Open Source subject, I have created a playlist specifically for Open Source:
+
 https://www.youtube.com/playlist?list=PLTDU7-XpBugwc9NNYO3rw7Ql1pY_oZE5d
 
 ### What is Markdown?
@@ -34,20 +35,26 @@ https://www.youtube.com/playlist?list=PLTDU7-XpBugwc9NNYO3rw7Ql1pY_oZE5d
 The syntax formatting using "Markdown" (*.md) files
 
 Please get familiar with basics of Markdown script:
+
 https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet
 
 ### Text Editor
 
-You can use any text editor you like, but I would recommend WYSIWG tool like Typora.
+You can use any text editor you like, but I would recommend WYSIWG tool like [Typora](https://www.typora.io/).
+
 https://www.typora.io/ 
+
+### GitHub account
+
+Create your GItHub account, as you learn more about Open Source you will get to love it and you will want to contribute to many projects.
 
 ### Forking the project
 
-Once you watch the Open Source videos you should be able to 
+Once you watch the GitHub Open Source videos you should be able to "Fork" the project to your own GitHub account.
 
-1) "Fork" the project to your ouw GitHub account
+### Create new branch
 
-2) Create a new "Branch" that describes specific changes you are making
+Create a new "Branch" that describes specific changes you are making
 
 `genomics-easy-as-pi-book $ git branch`
 
@@ -57,16 +64,21 @@ Once you watch the Open Source videos you should be able to
 
 `*modify-contributing-file`
 
+### Browser edits
 
+You can make Mardown changes in the browser, it is the easiest way to contribute
 
-3) Make changes in the browser, or
+### Cloning the fork locally
 
-4) Copy the project to your computer:
+You can copy the "forked" project to your own computer
+
 `git clone https://github.com/YOUR_ALIAS_HERE/genomics-easy-as-pi-book.git`
 
-5) Make changes to a file
+### Using Git
 
-6) Commmit (you can use GitHub desktop)
+Once you get some experience with Open Souce you will be using Git command line comments all the time
+
+Commmit (you can use GitHub desktop)
 
 example command line commit:
 
@@ -81,6 +93,5 @@ example command line commit:
 `genomics-easy-as-pi-book  $ git push`
 
 
-
-7) Request Pull
+Request Pull
 
