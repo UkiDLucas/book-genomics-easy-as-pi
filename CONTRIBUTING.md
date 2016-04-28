@@ -12,6 +12,12 @@ It is important to keep in mind some goals for this book:
 
 3) This book should take advantage of being online and stay up to date, you can always contribute by checking the latest statistics and updating the content.
 
+### Review open Issues
+
+I am writing [Issues](https://github.com/UkiDLucas/genomics-easy-as-pi-book/issues) as a means to ask for community help, if you see an issue that you know you could address then try to help by contributiing:
+
+https://github.com/UkiDLucas/genomics-easy-as-pi-book/issues
+
 ### How much can I contribute?
 
 If you are adding new content, then feel free to add as much as you want, but expect that you will be asked to make edits and changes to your text before merging it to the book.
