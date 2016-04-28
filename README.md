@@ -13,7 +13,7 @@ I would love to see people contrubuting more information to the existing version
 
 ### Why book content is in "en" folder?
 
-I have placed all English content in "en" folder so it is easy in the future to translate the text to other langauages, e.g. Spanish will have a copy in "es", Russian in "ru" and Polish in "pl" folder.
+I have placed all English content in "en" folder so it is easy in the future to translate the text to other langauages, e.g. Spanish will have a copy in "es", Russian in "ru" and Polish in "pl" folder using [standard two letter abbreviations](https://en.wikipedia.org/wiki/ISO_639-1).
 
 ### You can be a co-author
 
