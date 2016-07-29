@@ -10,7 +10,7 @@ In summary, Pi boards are a good candidate for distributed computing as can be r
 
 ## Hadoop
 
-Hadoop is a set of open source software tools designed to be used as operating system for distributed computer. 
+Hadoop is a set of open source Java software tools designed to be used as operating system for distributed computer. 
 
 The two major components of Hadoop are "Distributed File System", or HDFS and Yarn. The HDFS is used to store Big Data in small chunks across distributed set of inexpensive disks, e.g. SD cards in Pi boards. YARN is a manager for distributed processes.
 
