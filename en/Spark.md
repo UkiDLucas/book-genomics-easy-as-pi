@@ -1,4 +1,4 @@
-# Running Jupyter Scala on Spark
+# Jupyter Scala on Spark
 
 [TOC]
 
@@ -16,7 +16,9 @@ Requirement already up-to-date: jupyter in /Users/ukilucas/anaconda/lib/python3.
 
 
 
-## Jupyter Scala Installation
+## Jupyter Kernels
+
+### Scala - Installing Kernel for Jupyter
 
 
 
@@ -77,7 +79,7 @@ and selecting the "Scala 2.10" kernel.
 
 
 
-Installing R language Kernel for Jupyter
+### R language - Installing Kernel for Jupyter
 
 ```shell
 ~ $ conda install -c r r-essentials
@@ -128,7 +130,7 @@ It should open a browser with:
 
 http://localhost:8889/tree
 
-## Aparapi - Java GPU programming (OpenCL)
+# Aparapi - Java GPU programming (OpenCL)
 
 Download and run examples.
 
