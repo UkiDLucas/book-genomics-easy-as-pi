@@ -77,16 +77,29 @@ and selecting the "Scala 2.10" kernel.
 
 
 
+Installing R language Kernel for Jupyter
+
+```shell
+~ $ conda install -c r r-essentials
+~ $ conda create -n r-kernel -c r r-essentials
+~ $ source activate r-kernel
+```
+
+
+
+
+
 ### Jupiter Kernels - languages available to write with
 
 
 ```shell
 
-$ jupyter kernelspec list
+~ $ jupyter kernelspec list
 Available kernels:
   python3     /Users/ukilucas/anaconda/lib/python3.5/site-packages/ipykernel/resources
   scala210    /Users/ukilucas/Library/Jupyter/kernels/scala210
   scala211    /Users/ukilucas/Library/Jupyter/kernels/scala211
+  ir          /Users/ukilucas/anaconda/share/jupyter/kernels/ir
   
 ```
 
