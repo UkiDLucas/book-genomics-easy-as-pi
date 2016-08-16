@@ -1,9 +1,8 @@
-# Jupyter-scala
+# Running Jupyter Scala on Spark
 
-Follow instructions:
-https://github.com/alexarchambault/jupyter-scala
+[TOC]
 
-## Jupyter
+## Jupyter version
 
 Make sure you have installed Jupyter
 
@@ -14,6 +13,15 @@ $ jupyter --version
 $ pip install --upgrade jupyter
 Requirement already up-to-date: jupyter in /Users/ukilucas/anaconda/lib/python3.5/site-packages
 ```
+
+
+
+## Jupyter Scala Installation
+
+
+
+Follow instructions:
+https://github.com/alexarchambault/jupyter-scala
 
 Jupyter Scala
 
@@ -84,7 +92,7 @@ Available kernels:
 
 
 
-## Start jupyter notebook
+## Start Jupyter Notebook
 
 ```shell
 $ ipython notebook
@@ -107,7 +115,7 @@ It should open a browser with:
 
 http://localhost:8889/tree
 
-## Aparapi
+## Aparapi - Java GPU programming (OpenCL)
 
 Download and run examples.
 
