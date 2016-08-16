@@ -1,8 +1,14 @@
+
+
 # Jupyter Scala on Spark
 
 [TOC]
 
-### Install Anaconda
+## Jupyter
+
+### Anaconda - install Jupyter
+
+You need to have Anaconda installed with Python 3.5
 
 ```shell
 $ conda install jupyter
@@ -10,21 +16,20 @@ $ conda install jupyter
 
 
 
-## Jupyter version
+### Jupyter version
 
 Make sure you have installed Jupyter
 
 ```shell
 $ jupyter --version
 4.1.0
-
 $ pip install --upgrade jupyter
 Requirement already up-to-date: jupyter in /Users/ukilucas/anaconda/lib/python3.5/site-packages
 ```
 
 
 
-## Jupyter Kernels
+### Jupyter Kernels
 
 ### Scala - Installing Kernel for Jupyter
 
@@ -147,7 +152,7 @@ $ edit /usr/local/share/jupyter/kernels/apache_toree_scala/kernel.json
 
 
 
-#### Jupiter Kernels - languages available to write with
+### Jupiter Kernels - languages available to write with
 
 
 ```shell
@@ -180,7 +185,7 @@ drwxr-xr-x   3 ukilucas  staff   102 Aug 15 17:14 .
 
 
 
-## Start Jupyter Notebook
+### Start Jupyter Notebook
 
 ```shell
 $ ipython notebook
@@ -207,9 +212,9 @@ http://localhost:8889/tree
 
 
 
-# Spark
+## Spark
 
-## Starting Spark
+### Starting Spark
 
 
 
@@ -251,7 +256,7 @@ Download and run examples.
 
 [Aparapi_2012_01_23_MacOSX_zip](https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/aparapi/Aparapi_2012_01_23_MacOSX_zip)
 
-
+## GPU info
 
 
 ```shell
@@ -307,6 +312,8 @@ OpenCLDevice.firstGPU() returned {
 }
 > info $ 
 ```
+
+### Example of Squares
 
 
 ```shell
