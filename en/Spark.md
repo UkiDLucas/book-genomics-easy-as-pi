@@ -99,23 +99,72 @@ and selecting the "Scala 2.10" kernel.
 
 
 
-### Jupiter Kernels - languages available to write with
+### Apache Toree
+
+
+
+```shell
+$ pip install toree
+Requirement already satisfied (use --upgrade to upgrade): toree in /Users/ukilucas/anaconda/lib/python3.5/site-packages
+Requirement already satisfied (use --upgrade to upgrade): traitlets<5.0,>=4.0 in /Users/ukilucas/anaconda/lib/python3.5/site-packages (from toree)
+Requirement already satisfied (use --upgrade to upgrade): jupyter-client<5.0,>=4.0 in /Users/ukilucas/anaconda/lib/python3.5/site-packages (from toree)
+Requirement already satisfied (use --upgrade to upgrade): jupyter-core<5.0,>=4.0 in /Users/ukilucas/anaconda/lib/python3.5/site-packages (from toree)
+> dev $ 
+```
+
+```shell
+$ dev $ jupyter toree install
+[ToreeInstall] Installing Apache Toree version 0.1.0.dev8
+[ToreeInstall] 
+Apache Toree is an effort undergoing incubation at the Apache Software
+Foundation (ASF), sponsored by the Apache Incubator PMC.
+
+Incubation is required of all newly accepted projects until a further review
+indicates that the infrastructure, communications, and decision making process
+have stabilized in a manner consistent with other successful ASF projects.
+
+While incubation status is not necessarily a reflection of the completeness
+or stability of the code, it does indicate that the project has yet to be
+fully endorsed by the ASF.
+
+Additionally, this release is not fully compliant with Apache release policy
+and includes a runtime dependency that is licensed as LGPL v3 (plus a static
+linking exception). This package is currently under an effort to re-license
+(https://github.com/zeromq/jeromq/issues/327).
+[ToreeInstall] Creating kernel Scala
+[ToreeInstall] Installed kernelspec apache_toree_scala in /usr/local/share/jupyter/kernels/apache_toree_scala
+```
+
+
+
+#### Configuration of Apache Toree Scala - Spark Kernel
+
+```shell
+$ edit /usr/local/share/jupyter/kernels/apache_toree_scala/kernel.json 
+```
+
+
+
+
+
+#### Jupiter Kernels - languages available to write with
 
 
 ```shell
 
-~ $ jupyter kernelspec list
+ $ jupyter kernelspec list
 Available kernels:
-  python3     /Users/ukilucas/anaconda/lib/python3.5/site-packages/ipykernel/resources
-  scala210    /Users/ukilucas/Library/Jupyter/kernels/scala210
-  scala211    /Users/ukilucas/Library/Jupyter/kernels/scala211
-  ir          /Users/ukilucas/anaconda/share/jupyter/kernels/ir
+  python3               /Users/ukilucas/anaconda/lib/python3.5/site-packages/ipykernel/resources
+  scala210              /Users/ukilucas/Library/Jupyter/kernels/scala210
+  scala211              /Users/ukilucas/Library/Jupyter/kernels/scala211
+  ir                    /Users/ukilucas/anaconda/share/jupyter/kernels/ir
+  apache_toree_scala    /usr/local/share/jupyter/kernels/apache_toree_scala
   
 ```
 
 
 
-Jupyter Configuration
+### Jupyter Configuration
 
 
 
@@ -171,8 +220,6 @@ export SPARK_HOME=/Users/ukilucas/Spark/spark-2.0.0-bin-hadoop2.7
 
 
 
-
-
 ```shell
 ~ $ cd /Users/ukilucas/Spark/spark-2.0.0-bin-hadoop2.7/bin/
 bin $ ./spark-shell
@@ -193,6 +240,10 @@ Type :help for more information.
 scala> 
 
 ```
+
+
+
+
 
 # Aparapi - Java GPU programming (OpenCL)
 
