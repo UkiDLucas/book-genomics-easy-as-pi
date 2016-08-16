@@ -2,6 +2,14 @@
 
 [TOC]
 
+### Install Anaconda
+
+```shell
+$ conda install jupyter
+```
+
+
+
 ## Jupyter version
 
 Make sure you have installed Jupyter
@@ -107,6 +115,22 @@ Available kernels:
 
 
 
+Jupyter Configuration
+
+
+
+```shell
+$ cd ~/.jupyter
+(r-kernel) > .jupyter $ ls -alt
+total 8
+drwxr-xr-x+ 73 ukilucas  staff  2482 Aug 15 17:24 ..
+drwxr-xr-x   3 ukilucas  staff   102 Aug 15 17:14 .
+-rw-r--r--   1 ukilucas  staff    26 Aug 15 17:14 migrated
+
+```
+
+
+
 ## Start Jupyter Notebook
 
 ```shell
@@ -129,6 +153,46 @@ $ ipython notebook
 It should open a browser with:
 
 http://localhost:8889/tree
+
+
+
+
+
+# Spark
+
+## Starting Spark
+
+
+
+```shell
+$ edit ~/.bash_profile
+export SPARK_HOME=/Users/ukilucas/Spark/spark-2.0.0-bin-hadoop2.7
+```
+
+
+
+
+
+```shell
+~ $ cd /Users/ukilucas/Spark/spark-2.0.0-bin-hadoop2.7/bin/
+bin $ ./spark-shell
+Spark context Web UI available at http://192.168.1.70:4040
+Spark context available as 'sc' (master = local[*], app id = local-1471313270178).
+Spark session available as 'spark'.
+Welcome to
+      ____              __
+     / __/__  ___ _____/ /__
+    _\ \/ _ \/ _ `/ __/  '_/
+   /___/ .__/\_,_/_/ /_/\_\   version 2.0.0
+      /_/
+         
+Using Scala version 2.11.8 (Java HotSpot(TM) 64-Bit Server VM, Java 1.8.0_92)
+Type in expressions to have them evaluated.
+Type :help for more information.
+
+scala> 
+
+```
 
 # Aparapi - Java GPU programming (OpenCL)
 
