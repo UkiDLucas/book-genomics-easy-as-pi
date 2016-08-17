@@ -8,9 +8,9 @@ Download newest OS from:
 
 http://www.armbian.com/orange-pi-one/
 
-Insert and format a new SD card, class 10.
+Insert a new SD card, class 10, 8 to 16GB in size should be enough.
 
-Figure out what is the name of your CD card (in the reader):
+Figure out what is the name **/dev/disk*** of your CD card (in the reader):
 
 ```shell
 > OrangePI $ diskutil list
@@ -25,6 +25,16 @@ Figure out what is the name of your CD card (in the reader):
 
 The name of the SD card is **/dev/disk3**
 
+
+
+Re-format the SD card as MSDOS
+
+```
+sudo newfs_msdos -F 16 /dev/disk3
+```
+
+
+
 Unmount the SD card (do not remove it), before putting an image on it:
 
 ```shell
@@ -37,8 +47,17 @@ Unmount of all volumes on disk3 was successful
 Install the *.raw image on the SD card:
 
 ```shell
-> OrangePI $ sudo dd bs=1m of=/dev/disk3 if=/Users/ukilucas/Dropbox/OrangePI/Armbian_5.14_Orangepione_Debian_jessie_3.4.112.raw
+> OrangePI $ sudo dd bs=1m of=/dev/disk3 if=Armbian_5.14_Orangepione_Debian_jessie_3.4.112.raw
 Password:
 ```
 
 Wait patiently for a very long time.
+
+
+
+After making any good changes to SD card, make a clone of it. 
+
+```shell
+sudo dd if=/dev/disk3 of=OrangePiOne_date_time.dmg
+```
+
