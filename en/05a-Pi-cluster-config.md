@@ -1,4 +1,12 @@
-Instructions for Mac
+# Orange Pi One Configuration
+
+In this post I will provide OrangePi configuration instructions for Mac.
+
+## OS image installation
+
+Download newest OS from:
+
+http://www.armbian.com/orange-pi-one/
 
 Insert and format a new SD card, class 10.
 
@@ -19,8 +27,6 @@ The name of the SD card is **/dev/disk3**
 
 Unmount the SD card (do not remove it), before putting an image on it:
 
-
-
 ```shell
 > OrangePI $ diskutil unmountDisk /dev/disk3
 Unmount of all volumes on disk3 was successful
@@ -30,9 +36,9 @@ Unmount of all volumes on disk3 was successful
 
 Install the *.raw image on the SD card:
 
-
-
-```
-> OrangePI $ sudo dd bs=1m   of=/dev/disk3 if=/Users/ukilucas/Dropbox/OrangePI/Armbian_5.14_Orangepione_Debian_jessie_3.4.112.raw
+```shell
+> OrangePI $ sudo dd bs=1m of=/dev/disk3 if=/Users/ukilucas/Dropbox/OrangePI/Armbian_5.14_Orangepione_Debian_jessie_3.4.112.raw
 Password:
 ```
+
+Wait patiently for a very long time.
