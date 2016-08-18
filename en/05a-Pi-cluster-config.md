@@ -151,33 +151,68 @@ Rootfs Extended. Please REBOOT to take effect
 ### Install Java OpenJDK
 
 ```shell
-$ sudo apt-get install openjdk-8-jdk
-$ java -version
+root@orangepione:~# sudo apt-get install openjdk-8-jdk
+Reading package lists... Done
+Building dependency tree   
+...
+
+root@orangepione:~# java -version
+openjdk version "1.8.0_91"
+OpenJDK Runtime Environment (build 1.8.0_91-8u91-b14-1~bpo8+1-b14)
+OpenJDK Zero VM (build 25.91-b14, interpreted mode)
 ```
 
 
 
-### Install Anaconda
+### Install Anaconda & Python
 
 ```shell
-$ wget http://repo.continuum.io/archive/Anaconda2-4.1.1-Linux-x86.sh
-
-$ bash Anaconda3-4.1.1-Linux-x86.sh
+root@orangepione:~# wget http://repo.continuum.io/archive/Anaconda2-4.1.1-Linux-x86.sh
+root@orangepione:~# bash Anaconda2-4.1.1-Linux-x86.sh
+root@orangepione:~# python3
+Python 3.4.2 (default, Oct  8 2014, 14:38:51) 
+[GCC 4.9.1] on linux
 ```
 
 
 
 ### Install Scala
 
-```
+```shell
 $ wget http://www.scala-lang.org/files/archive/scala-2.10.4.tgz
 $ sudo mkdir /usr/local/src/scala
 $ sudo tar xvf scala-2.10.4.tgz -C /usr/local/src/scala/
+vi .bashrc
+export SCALA_HOME=/usr/local/src/scala/scala-2.10.4
+export PATH=$SCALA_HOME/bin:$PATH
+
+root@orangepione:~# vi .bashrc
+root@orangepione:~# cat .bashrc 
+# ~/.bashrc: executed by bash(1) for non-login shells.
+
+# Note: PS1 and umask are already set in /etc/profile. You should not
+# need this unless you want different defaults for root.
+# PS1='${debian_chroot:+($debian_chroot)}\h:\w\$ '
+# umask 022
+
+# You may uncomment the following lines if you want `ls' to be colorized:
+# export LS_OPTIONS='--color=auto'
+# eval "`dircolors`"
+# alias ls='ls $LS_OPTIONS'
+# alias ll='ls $LS_OPTIONS -l'
+# alias l='ls $LS_OPTIONS -lA'
+#
+# Some more alias to avoid making mistakes:
+# alias rm='rm -i'
+# alias cp='cp -i'
+# alias mv='mv -i'
 
 export SCALA_HOME=/usr/local/src/scala/scala-2.10.4
 export PATH=$SCALA_HOME/bin:$PATH
 
-$ scala -version
+root@orangepione:~# . .bashrc 
+root@orangepione:~#  scala -version
+Scala code runner version 2.10.4 -- Copyright 2002-2013, LAMP/EPFL
 ```
 
 
@@ -185,16 +220,23 @@ $ scala -version
 #### Install GIT
 
 ```shell
-$ sudo apt-get install git
+root@orangepione:~#  sudo apt-get install git
+Reading package lists... Done
+Building dependency tree       
+Reading state information... Done
+git is already the newest version.
+
+root@orangepione:~# git version
+git version 2.1.4
 ```
 
 
 
 ### Install Apache Spark
 
-```
-$ wget http://d3kbcqa49mib13.cloudfront.net/spark-1.1.0.tgz
-$ tar xvf spark-1.1.0.tgz 
+```shell
+$  wget http://d3kbcqa49mib13.cloudfront.net/spark-2.0.0-bin-hadoop2.7.tgz
+$ tar xvf spark **.tgz 
 $ cd spark-1.1.0
 $ sbt/sbt assembly
 $ ./bin/run-example SparkPi 10
