@@ -102,23 +102,7 @@ Thank you for choosing Armbian! Support: www.armbian.com
 
 Creating new account. Please provide a username (eg. your forename): Uki ...
 
-
-
-     _      _     _             
-  __| | ___| |__ (_) __ _ _ __  
- / _` |/ _ \ '_ \| |/ _` | '_ \ 
-| (_| |  __/ |_) | | (_| | | | |
- \__,_|\___|_.__/|_|\__,_|_| |_|
-                                
-
-Welcome to ARMBIAN Debian GNU/Linux 8 (jessie) 3.4.112-sun8i 
-
-System load:   0.31            	Up time:       1 min		
-Memory usage:  9 % of 494Mb  	IP:            192.168.1.86 
-CPU temp:      49°C           	
-Usage of /:    9% of 15G    	
-
-uki@orangepione:~$ 
+follow the steps...
 ```
 
 
@@ -269,16 +253,74 @@ Running Spark Examples on single MacBookPro 2.9 Ghz Intel Core i5
 
 
 
-#### Running Spark Examples on single OrangePi One (3 runs)
+#### Running Spark Example on single OrangePi One 4 cores 1.2GHz
 
-```
+[bit.ly/SparkPi](Stock Overflow post)
+
+OrangePi One SBC
+
+CPU: 1.6GHz H3 Quad-core Cortex-A7 H.265/HEVC 4K
+GPU: Mali400MP2 GPU @600MHz, Supports OpenGL ES 2.0
+RAM: 512MB DDR3 (shared with GPU)
+Armbian OS Debian GNU/Linux 8 (jessie) 3.4.112-sun8i
+
+
+My observation is that on OrangePi, the **execution is SINGLE THREADED**. I was expecting 4 parallel tasks, one per core. Please see the data below. I will see what can be optimized for existing cores, or Mali GPU (~7 GigaFLOPS).
+
+```shell
+
+
 root@orangepione:~/spark/spark-2.0.0-bin-hadoop2.7# ./bin/run-example SparkPi 10
-16/08/18 03:15:04 INFO DAGScheduler: Job 0 finished: reduce at SparkPi.scala:38, 
-took 41.7 s
-took 41.3 s 
-took 40.8 s
-Pi is roughly 3.143983143983144
+
+where 10 is number of distributed tasks/partitions/slices/threads
+
+# executed as 1 task on a single 4 core board
+
+took 19.0 s Pi is roughly 3.145951459514595
+took 19.0 s Pi is roughly 3.1346713467134673
+
+# executed as 2 tasks on a single 4 core board
+
+took 19.3 s Pi is roughly 3.1420757103785517
+took 19.4 s Pi is roughly 3.13639568197841
+
+# executed as 4 tasks on a single 4 core board
+
+took 21.2 s Pi is roughly 3.141427853569634
+took 21.5 s Pi is roughly 3.1445478613696536
+
+# executed as 10 tasks on a single 4 core board
+
+took 40.8 s Pi is roughly 3.143983143983144
+took 40.4 s Pi is roughly 3.141019141019141
+
+# executed as 50 tasks on a single 4 core board
+
+took 156.5 s Pi is roughly 3.1399118279823655
 ```
+
+After all system upgrades and software installed
+
+```shell
+$ ssh root@192.168.1.86
+root@192.168.1.86's password: 
+  ___                               ____  _    ___             
+ / _ \ _ __ __ _ _ __   __ _  ___  |  _ \(_)  / _ \ _ __   ___ 
+| | | | '__/ _` | '_ \ / _` |/ _ \ | |_) | | | | | | '_ \ / _ \
+| |_| | | | (_| | | | | (_| |  __/ |  __/| | | |_| | | | |  __/
+ \___/|_|  \__,_|_| |_|\__, |\___| |_|   |_|  \___/|_| |_|\___|
+                       |___/                                   
+
+Welcome to ARMBIAN Debian GNU/Linux 8 (jessie) 3.4.112-sun8i 
+System load:   0.07            	Up time:       11 min		
+Memory usage:  9 % of 494Mb  	IP:            192.168.1.86 
+CPU temp:      45°C           	
+Usage of /:    16% of 15G    	
+
+Last login: Thu Aug 18 15:22:39 2016 from unknownf4f26d40cace
+```
+
+
 
 ### Reboot Linux
 
@@ -297,11 +339,58 @@ Password:
 
 ```
 
-## Backup the Image
 
-After making any good changes to SD card, make a clone of it. 
+
+## Managing SD Images
+
+Downloading the OS, all the software tools and keeping them up to day is a lengthy process even for a single SD card, doing it for every node in your (massively) distributed computer would be a full time job. 
+
+The best way to approach this is to keep the newest, best image of the SD card and restore it on other nodes. 
+
+### Backup the Image (on Mac)
+
+After making any good changes, system upgrades to SD card, make a clone of it. 
 
 ```shell
-sudo dd if=/dev/disk3 of=OrangePiOne_date_time.dmg
+$  diskutil list
+
+/dev/disk3 (internal, physical):
+   #:                       TYPE NAME                    SIZE       IDENTIFIER
+   0:     FDisk_partition_scheme                        *15.9 GB    disk3
+   1:                      Linux                         15.8 GB    disk3s1
+   
+   
+ $ diskutil unmountDisk /dev/disk3
+Unmount of all volumes on disk3 was successful
+
+
+$ sudo dd if=/dev/disk3 of=OrangePiOne_20160818_0831.dmg
+Password:
+31116288+0 records in
+31116288+0 records out
+15931539456 bytes transferred in 2060.303430 secs (7732618 bytes/sec)
 ```
 
+
+
+### Restore the Backup SC Image to a new card
+
+```
+$ diskutil list
+...
+/dev/disk3 (internal, physical):
+   #:                       TYPE NAME                    SIZE       IDENTIFIER
+   0:     FDisk_partition_scheme                        *15.9 GB    disk3
+   1:                      Linux                         15.8 GB    disk3s1
+   
+   
+$ diskutil unmountDisk /dev/disk3
+Unmount of all volumes on disk3 was successful
+
+
+> Spark2 $ sudo dd bs=1m of=/dev/disk3 if=OrangePiOne_20160818_0831.dmg 
+Password:
+
+NOTHING IS HAPPENING, WAIT A VERY LONG TIME: 30 minutes?!?
+
+```
