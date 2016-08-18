@@ -232,17 +232,59 @@ git version 2.1.4
 
 
 
-### Install Apache Spark
+### Apache Spark
+
+#### Install Apache Spark
 
 ```shell
 $  wget http://d3kbcqa49mib13.cloudfront.net/spark-2.0.0-bin-hadoop2.7.tgz
-$ tar xvf spark **.tgz 
-$ cd spark-1.1.0
-$ sbt/sbt assembly
-$ ./bin/run-example SparkPi 10
+$ mkdir spark
+$ mv spark-2.0.0-bin-hadoop2.7.tgz spark/
+$ cd spark
+$ root@orangepione:~/spark# tar xvf spark-2.0.0-bin-hadoop2.7.tgz
+
+
+```
+
+#### Running Apache Spark
+
+```shell
+root@orangepione:~/spark/spark-2.0.0-bin-hadoop2.7# ./sbin/start-master.sh
+$ tail -F /root/spark/spark-2.0.0-bin-hadoop2.7/logs/spark-root-org.apache.spark.deploy.master.Master-1-orangepione.out
+
+http://192.168.1.86:8080/
+URL: spark://orangepione:7077
+REST URL: spark://orangepione:6066 (cluster mode)
+Alive Workers: 0
+Cores in use: 0 Total, 0 Used
+Memory in use: 0.0 B Total, 0.0 B Used
+Applications: 0 Running, 0 Completed
+Drivers: 0 Running, 0 Completed
+Status: ALIVE
 ```
 
 
+
+Running Spark Examples on single MacBookPro 2.9 Ghz Intel Core i5 
+
+
+
+#### Running Spark Examples on single OrangePi One (3 runs)
+
+```
+root@orangepione:~/spark/spark-2.0.0-bin-hadoop2.7# ./bin/run-example SparkPi 10
+16/08/18 03:15:04 INFO DAGScheduler: Job 0 finished: reduce at SparkPi.scala:38, 
+took 41.7 s
+took 41.3 s 
+took 40.8 s
+Pi is roughly 3.143983143983144
+```
+
+### Reboot Linux
+
+```
+shutdown -r time "message"
+```
 
 ### Shutdown Linux
 
