@@ -429,6 +429,14 @@ C8585+0 records in
 root@orangepione:~/spark# ./sbin/start-master.sh
 starting org.apache.spark.deploy.master.Master, logging to /root/spark/logs/spark-root-org.apache.spark.deploy.master.Master-1-orangepione.out
 
+
+```
+
+
+
+Monitoring the Master logs
+
+```shell
 root@orangepione:~/spark# tail -f /root/spark/logs/spark-root-org.apache.spark.deploy.master.Master-1-orangepione.out
 Spark Command: /usr/lib/jvm/java-8-openjdk-armhf/jre/bin/java -cp /root/spark/conf/:/root/spark/jars/* -Xmx1g org.apache.spark.deploy.master.Master --host orangepione --port 7077 --webui-port 8080
 ========================================
@@ -459,16 +467,14 @@ Using Spark's default log4j profile: org/apache/spark/log4j-defaults.properties
 It takes a while, but MasterWebUI can be opened from your Mac/PC 
 http://192.168.1.88:8080/
 
-### Stopping Master
-
-```shell
-orangepione:~/spark# 192.168.1.88/24  ./sbin/start-master.sh
-```
-
 ### Starting Workers
 
 ```shell
+# REMOTELY
 $ ssh root@192.168.1.86 "cd spark ; ./bin/spark-class org.apache.spark.deploy.worker.Worker spark://192.168.1.88:7077 -m 512M &"
+
+# LOCALLy on the board
+./bin/spark-class org.apache.spark.deploy.worker.Worker spark://192.168.1.88:7077 -m 400M &
 ```
 
 
@@ -482,3 +488,31 @@ Running Spark using the REST application submission protocol.
 Using Spark's default log4j profile: org/apache/spark/log4j-defaults.properties
 16/08/18 16:09:00 INFO RestSubmissionClient: Submitting a request to launch an application in spark://192.168.1.88:7077.
 ```
+
+
+
+```
+./bin/spark-submit --class org.apache.spark.examples.SparkPi --master spark://192.168.1.88:7077 --total-executor-cores 5 --deploy-mode cluster --supervise examples/jars/spark-examples_2.11-2.0.0.jar 1000 
+```
+
+
+
+### Killing a stuck job
+
+```shell
+root@orangepione:~/spark# ./bin/spark-class org.apache.spark.deploy.Client kill spark://192.168.1.88:7077 driver-20160819025159-0006
+WARNING: This client is deprecated and will be removed in a future version of Spark
+Use ./bin/spark-submit with "--master spark://host:port"
+...
+16/08/19 20:05:47 INFO ClientEndpoint: State of driver-20160819025159-0006 is KILLED
+```
+
+
+
+### Stopping Spark
+
+```shell
+orangepione:~/spark#  ./sbin/stop-all.sh  
+```
+
+### 
