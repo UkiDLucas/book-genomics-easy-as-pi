@@ -32,7 +32,22 @@ Unmount of all volumes on disk3 was successful
 
 ### Reformat SD card
 
-Re-format the SD card as MSDOS in Mac Disk Utility - works better
+Re-format the SD card as FAT32
+
+```shell
+$ sudo diskutil eraseDisk FAT32 PI005 MBRFormat /dev/disk3
+Started erase on disk3
+Unmounting disk
+Creating the partition map
+Waiting for the disks to reappear
+Formatting disk3s1 as MS-DOS (FAT32) with name PI005
+512 bytes per physical sector
+/dev/rdisk3s1: 31077712 sectors in 1942357 FAT32 clusters (8192 bytes/cluster)
+bps=512 spc=16 res=32 nft=2 mid=0xf8 spt=32 hds=255 hid=8192 drv=0x80 bsec=31108096 bspf=15175 rdcl=2 infs=1 bkbs=6
+Mounting disk
+Finished erase on disk3
+
+```
 
 
 
@@ -297,6 +312,7 @@ took 40.4 s Pi is roughly 3.141019141019141
 # executed as 50 tasks on a single 4 core board
 
 took 156.5 s Pi is roughly 3.1399118279823655
+took 154.7 s Pi is roughly 3.1423286284657257
 ```
 
 After all system upgrades and software installed
@@ -375,7 +391,7 @@ Password:
 
 ### Restore the Backup SC Image to a new card
 
-```
+```shell
 $ diskutil list
 ...
 /dev/disk3 (internal, physical):
@@ -383,14 +399,86 @@ $ diskutil list
    0:     FDisk_partition_scheme                        *15.9 GB    disk3
    1:                      Linux                         15.8 GB    disk3s1
    
-   
+# FORMAT SC CARD!!! with name PI005
+$ sudo diskutil eraseDisk FAT32 PI005 MBRFormat /dev/disk3   
+
 $ diskutil unmountDisk /dev/disk3
 Unmount of all volumes on disk3 was successful
 
 
-> Spark2 $ sudo dd bs=1m of=/dev/disk3 if=OrangePiOne_20160818_0831.dmg 
+> Spark2 $ sudo dd bs=1m if=OrangePiOne_20160818_0831.dmg of=/dev/disk3  
 Password:
 
-NOTHING IS HAPPENING, WAIT A VERY LONG TIME: 30 minutes?!?
+NOTHING IS HAPPENING, WAIT A VERY LONG TIME: 50 minutes?!?
 
+C8585+0 records in
+8584+0 records out
+9000976384 bytes transferred in 2676.642025 secs (3362787 bytes/sec)
+
+```
+
+
+
+## Running Spark
+
+
+
+### Starting Master and Log
+
+```shell
+root@orangepione:~/spark# ./sbin/start-master.sh
+starting org.apache.spark.deploy.master.Master, logging to /root/spark/logs/spark-root-org.apache.spark.deploy.master.Master-1-orangepione.out
+
+root@orangepione:~/spark# tail -f /root/spark/logs/spark-root-org.apache.spark.deploy.master.Master-1-orangepione.out
+Spark Command: /usr/lib/jvm/java-8-openjdk-armhf/jre/bin/java -cp /root/spark/conf/:/root/spark/jars/* -Xmx1g org.apache.spark.deploy.master.Master --host orangepione --port 7077 --webui-port 8080
+========================================
+Using Spark's default log4j profile: org/apache/spark/log4j-defaults.properties
+16/08/18 23:59:26 INFO Master: Started daemon with process name: 1831@orangepione
+16/08/18 23:59:26 INFO SignalUtils: Registered signal handler for TERM
+16/08/18 23:59:26 INFO SignalUtils: Registered signal handler for HUP
+16/08/18 23:59:26 INFO SignalUtils: Registered signal handler for INT
+16/08/18 23:59:27 WARN Utils: Your hostname, orangepione resolves to a loopback address: 127.0.0.1; using 192.168.1.88 instead (on interface eth0)
+16/08/18 23:59:27 WARN Utils: Set SPARK_LOCAL_IP if you need to bind to another address
+16/08/18 23:59:36 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+16/08/18 23:59:40 INFO SecurityManager: Changing view acls to: root
+16/08/18 23:59:40 INFO SecurityManager: Changing modify acls to: root
+16/08/18 23:59:40 INFO SecurityManager: Changing view acls groups to: 
+16/08/18 23:59:40 INFO SecurityManager: Changing modify acls groups to: 
+16/08/18 23:59:40 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users  with view permissions: Set(root); groups with view permissions: Set(); users  with modify permissions: Set(root); groups with modify permissions: Set()
+16/08/18 23:59:45 INFO Utils: Successfully started service 'sparkMaster' on port 7077.
+16/08/18 23:59:50 INFO Master: Starting Spark master at spark://orangepione:7077
+16/08/18 23:59:50 INFO Master: Running Spark version 2.0.0
+16/08/18 23:59:53 INFO Utils: Successfully started service 'MasterUI' on port 8080.
+16/08/18 23:59:53 INFO MasterWebUI: Bound MasterWebUI to 0.0.0.0, and started at http://192.168.1.88:8080
+16/08/18 23:59:53 INFO Utils: Successfully started service on port 6066.
+16/08/18 23:59:53 INFO StandaloneRestServer: Started REST server for submitting applications on port 6066
+16/08/18 23:59:58 INFO Master: I have been elected leader! New state: ALIVE
+16/08/19 00:00:04 INFO Master: Registering worker 192.168.1.88:49380 with 4 cores, 300.0 MB RAM
+```
+
+It takes a while, but MasterWebUI can be opened from your Mac/PC 
+http://192.168.1.88:8080/
+
+### Stopping Master
+
+```shell
+orangepione:~/spark# 192.168.1.88/24  ./sbin/start-master.sh
+```
+
+### Starting Workers
+
+```shell
+$ ssh root@192.168.1.86 "cd spark ; ./bin/spark-class org.apache.spark.deploy.worker.Worker spark://192.168.1.88:7077 -m 512M &"
+```
+
+
+
+### Submitting Spark Job
+
+```shell
+$  ssh root@192.168.1.88 "cd spark ; ./bin/spark-submit --class org.apache.spark.examples.SparkPi --master spark://192.168.1.88:7077 --deploy-mode cluster examples/jars/spark-examples_2.11-2.0.0.jar &"
+
+Running Spark using the REST application submission protocol.
+Using Spark's default log4j profile: org/apache/spark/log4j-defaults.properties
+16/08/18 16:09:00 INFO RestSubmissionClient: Submitting a request to launch an application in spark://192.168.1.88:7077.
 ```
