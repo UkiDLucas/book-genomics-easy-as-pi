@@ -67,6 +67,112 @@ Wait patiently for a very long time.
 
 
 
+Check SD card size
+
+If you had the original image size made for e.g. 16GB SD card and you are using 32 GB card, it may show that you are using only 16GB (or less)
+
+```shell
+root@orangepione:~# df -h
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/mmcblk0p1   15G  2.2G   13G  16% /
+udev             10M     0   10M   0% /dev
+tmpfs           201M  4.5M  196M   3% /run
+tmpfs           501M     0  501M   0% /dev/shm
+tmpfs           5.0M  4.0K  5.0M   1% /run/lock
+tmpfs           501M     0  501M   0% /sys/fs/cgroup
+tmpfs           501M   36K  501M   1% /tmp
+tmpfs           101M     0  101M   0% /run/user/0
+root@orangepione:~# sudo fdisk -uc /dev/mmcblk0
+
+Welcome to fdisk (util-linux 2.25.2).
+Changes will remain in memory only, until you decide to write them.
+Be careful before using the write command.
+
+
+Command (m for help): p
+Disk /dev/mmcblk0: 29.7 GiB, 31914983424 bytes, 62333952 sectors
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disklabel type: dos
+Disk identifier: 0x5faa38c0
+
+Device         Boot Start      End  Sectors  Size Id Type
+/dev/mmcblk0p1       2048 30805119 30803072 14.7G 83 Linux
+```
+
+
+
+In the code above you can see that I have 32GB card (/dev/mmcblk0: 29.7 GiB),
+
+but only 14.7GB Linux partition (/dev/mmcblk0p1       2048 30805119 30803072 14.7G 83 Linux)
+
+- Next we will Delete (d) our 15G partition
+- Create New (n) partition 
+- Selecte Primary (p) partition to be recreted
+- Select first sector which should be EXACTLY SAME sector original deleted partition was starting with
+- Select last partition (nothing for default end of the disk)
+- Write (w) changes
+
+
+
+```shell
+root@orangepione:~# sudo fdisk -uc /dev/mmcblk0
+
+Welcome to fdisk (util-linux 2.25.2).
+Changes will remain in memory only, until you decide to write them.
+Be careful before using the write command.
+
+
+Command (m for help): p
+Disk /dev/mmcblk0: 29.7 GiB, 31914983424 bytes, 62333952 sectors
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disklabel type: dos
+Disk identifier: 0x5faa38c0
+
+Device         Boot Start      End  Sectors  Size Id Type
+/dev/mmcblk0p1       2048 30805119 30803072 14.7G 83 Linux
+
+# Detele (d) original partition 
+
+Command (m for help): d
+Selected partition 1
+Partition 1 has been deleted.
+
+# Create New (n) partition
+
+Command (m for help): n
+Partition type
+   p   primary (0 primary, 0 extended, 4 free)
+   e   extended (container for logical partitions)
+   
+# Select Primary (p) partition
+
+Select (default p): p
+Partition number (1-4, default 1): 1
+First sector (2048-62333951, default 2048): 2048
+Last sector, +sectors or +size{K,M,G,T,P} (2048-62333951, default 62333951): 
+
+Created a new partition 1 of type 'Linux' and of size 29.7 GiB.
+
+# Save / Write (w) changes
+
+Command (m for help): w
+The partition table has been altered.
+Calling ioctl() to re-read partition table.
+Re-reading the partition table failed.: Device or resource busy
+
+The kernel still uses the old table. The new table will be used at the next reboot or after you run partprobe(8) or kpartx(8).
+
+# restart the computer
+
+root@orangepione:~# shutdown -r now
+```
+
+
+
 ### Boot up your OrangePi One
 
 Turn off the PI power.
@@ -141,6 +247,17 @@ PARTITION RESIZED.
 *********************************************
 Rootfs Extended. Please REBOOT to take effect
 *********************************************
+```
+
+
+
+changing compute'r hostname
+
+
+
+```shell
+# Mac
+> spark $ sudo scutil --set HostName uki
 ```
 
 
@@ -423,6 +540,14 @@ C8585+0 records in
 
 
 
+
+
+### Running a Test App
+
+```shell
+./bin/run-example SparkPi 4 --cores 4 --memory 256M
+```
+
 ### Starting Master and Log
 
 ```shell
@@ -469,17 +594,43 @@ http://192.168.1.88:8080/
 
 ### Starting Workers
 
-```shell
-# REMOTELY
-$ ssh root@192.168.1.86 "cd spark ; ./bin/spark-class org.apache.spark.deploy.worker.Worker spark://192.168.1.88:7077 -m 512M &"
+INFO MasterWebUI: Bound MasterWebUI to 0.0.0.0, and started at http://192.168.1.91:8080
+INFO Utils: Successfully started service on port 6066.
+Open WebUI of your master node http://192.168.1.91:8080/
 
-# LOCALLy on the board
-./bin/spark-class org.apache.spark.deploy.worker.Worker spark://192.168.1.88:7077 -m 400M &
+- REST URL: spark://orangepione:6066 (cluster mode)
+- Assuming spark://192.168.1.91:6066 is your Master's IP:port
+
+```shell
+
+
+# LOCALLY on the board
+root@orangepione:~/spark# ./bin/spark-class org.apache.spark.deploy.worker.Worker spark://192.168.1.91:6066 --cores 4 --memory 800m &
+
+
+
+
+Options:
+  -c CORES, --cores CORES  Number of cores to use
+  -m MEM, --memory MEM     Amount of memory to use (e.g. 1000M, 2G)
+  -d DIR, --work-dir DIR   Directory to run apps in (default: SPARK_HOME/work)
+  -i HOST, --ip IP         Hostname to listen on (deprecated, please use --host or -h)
+  -h HOST, --host HOST     Hostname to listen on
+  -p PORT, --port PORT     Port to listen on (default: random)
+  --webui-port PORT        Port for web UI (default: 8081)
+  --properties-file FILE   Path to a custom Spark properties file.
+                           Default is conf/spark-defaults.conf.
+                           
+                           
+# REMOTELY from other computer
+$ ssh root@192.168.1.86 "cd spark ; ./bin/spark-class org.apache.spark.deploy.worker.Worker spark://192.168.1.90:6066 -m 512M &"
 ```
 
 
 
 ### Submitting Spark Job
+
+From remote computer
 
 ```shell
 $  ssh root@192.168.1.88 "cd spark ; ./bin/spark-submit --class org.apache.spark.examples.SparkPi --master spark://192.168.1.88:7077 --deploy-mode cluster examples/jars/spark-examples_2.11-2.0.0.jar &"
@@ -489,10 +640,13 @@ Using Spark's default log4j profile: org/apache/spark/log4j-defaults.properties
 16/08/18 16:09:00 INFO RestSubmissionClient: Submitting a request to launch an application in spark://192.168.1.88:7077.
 ```
 
-
+from local master
 
 ```
 ./bin/spark-submit --class org.apache.spark.examples.SparkPi --master spark://192.168.1.88:7077 --total-executor-cores 5 --deploy-mode cluster --supervise examples/jars/spark-examples_2.11-2.0.0.jar 1000 
+
+./bin/spark-submit --class org.apache.spark.examples.JavaPageRank --master spark://192.168.1.88:7077 --total-executor-cores 5 --deploy-mode cluster --supervise examples/jars/spark-examples_2.11-2.0.0.jar 1000 
+
 ```
 
 
