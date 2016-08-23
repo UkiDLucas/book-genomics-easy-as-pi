@@ -251,16 +251,62 @@ Rootfs Extended. Please REBOOT to take effect
 
 
 
-changing compute'r hostname
+### changing compute'r hostname
 
 
 
 ```shell
 # Mac
 > spark $ sudo scutil --set HostName uki
+
+# Debian 
+vi /etc/hostname
+
+
+192.168.1.84    spark_master
+127.0.0.1       localhost pi85
+...
+
+press ESC : wq
+reboot
+
 ```
 
 
+
+Adjusting Hosts file
+
+```
+root@pi85:~/spark# vi  /etc/hosts
+
+```
+
+
+
+Adjusting TimeZone
+
+```shell
+$ dpkg-reconfigure tzdata
+```
+
+
+
+### Setting shell prompt
+
+```shell
+
+spark $ vi ~/.bash_profile
+
+export PS1="\u@\h $(ifconfig | grep 192.168.1 | cut -d: -f2 | awk '{ print $1}') \A \W $ "
+
+
+ESC : wq
+
+# Execute
+
+root@pi002:~/spark# . ~/.bash_profile
+root@pi002 192.168.1.88 21:29 spark $ 
+```
 
 ## Software Tools Installation
 
@@ -538,9 +584,26 @@ C8585+0 records in
 
 ## Running Spark
 
+### Configuration
 
+```shell
+> spark $ cat conf/spark-env.sh
+SPARK_MASTER_HOST=192.168.1.84
+# SPARK_WORKER_CORES
+> spark $ 
 
-
+$ cat /etc/hosts
+##
+# Host Database
+#
+# localhost is used to configure the loopback interface
+# when the system is booting.  Do not change this entry.
+##
+127.0.0.1			localhost uki
+# 192.168.1.85 		localhost
+255.255.255.255		broadcasthost
+::1             	localhost 
+```
 
 ### Running a Test App
 
@@ -548,7 +611,20 @@ C8585+0 records in
 ./bin/run-example SparkPi 4 --cores 4 --memory 256M
 ```
 
-### Starting Master and Log
+
+
+### Starting All (Master and Workers)
+
+```
+spark# ./sbin/stop-all.sh
+root@localhost's password: 
+localhost: no org.apache.spark.deploy.worker.Worker to stop
+stopping org.apache.spark.deploy.master.Master
+
+> spark $ ./sbin/start-all.sh
+```
+
+### Starting Master
 
 ```shell
 root@orangepione:~/spark# ./sbin/start-master.sh
@@ -594,15 +670,49 @@ http://192.168.1.88:8080/
 
 ### Starting Workers
 
-INFO MasterWebUI: Bound MasterWebUI to 0.0.0.0, and started at http://192.168.1.91:8080
-INFO Utils: Successfully started service on port 6066.
-Open WebUI of your master node http://192.168.1.91:8080/
+**Spark Master at spark://192.168.1.84:7077**
 
-- REST URL: spark://orangepione:6066 (cluster mode)
-- Assuming spark://192.168.1.91:6066 is your Master's IP:port
+- **URL:** spark://192.168.1.84:7077
+- **REST URL:** spark://192.168.1.84:6066 (cluster mode)
+- **Alive Workers:** 4
+- **Cores in use:** 16 Total, 0 Used
+- **Memory in use:** 18.0 GB Total, 0.0 B Used
+- **Applications:** 0 [Running](http://192.168.1.84:8080/#running-app), 2 [Completed](http://192.168.1.84:8080/#completed-app)
+- **Drivers:** 0 Running, 2 Completed
+- **Status:** ALIVE
 
 ```shell
+root@pi003:~# ./sbin/start-slave.sh spark://192.168.1.84:7077
 
+
+
+-bash: ./sbin/start-slave.sh: No such file or directory
+root@pi003:~# cd spark/
+root@pi003:~/spark# ./sbin/start-slave.sh spark://192.168.1.84:7077
+starting org.apache.spark.deploy.worker.Worker, logging to /root/spark/logs/spark-root-org.apache.spark.deploy.worker.Worker-1-pi003.out
+root@pi003:~/spark# tail -f /root/spark/logs/spark-root-org.apache.spark.deploy.worker.Worker-1-pi003.out
+Spark Command: /usr/lib/jvm/java-8-openjdk-armhf/jre/bin/java -cp /root/spark/conf/:/root/spark/jars/* -Xmx1g org.apache.spark.deploy.worker.Worker --webui-port 8081 spark://192.168.1.84:7077
+========================================
+Using Spark's default log4j profile: org/apache/spark/log4j-defaults.properties
+16/08/23 02:34:32 INFO Worker: Started daemon with process name: 764@pi003
+16/08/23 02:34:32 INFO SignalUtils: Registered signal handler for TERM
+16/08/23 02:34:32 INFO SignalUtils: Registered signal handler for HUP
+16/08/23 02:34:32 INFO SignalUtils: Registered signal handler for INT
+16/08/23 02:34:42 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+16/08/23 02:34:45 INFO SecurityManager: Changing view acls to: root
+16/08/23 02:34:45 INFO SecurityManager: Changing modify acls to: root
+16/08/23 02:34:45 INFO SecurityManager: Changing view acls groups to: 
+16/08/23 02:34:45 INFO SecurityManager: Changing modify acls groups to: 
+16/08/23 02:34:45 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users  with view permissions: Set(root); groups with view permissions: Set(); users  with modify permissions: Set(root); groups with modify permissions: Set()
+16/08/23 02:34:51 INFO Utils: Successfully started service 'sparkWorker' on port 48666.
+16/08/23 02:34:55 INFO Worker: Starting Spark worker 192.168.1.87:48666 with 4 cores, 1024.0 MB RAM
+16/08/23 02:34:55 INFO Worker: Running Spark version 2.0.0
+16/08/23 02:34:55 INFO Worker: Spark home: /root/spark
+16/08/23 02:34:58 INFO Utils: Successfully started service 'WorkerUI' on port 8081.
+16/08/23 02:34:58 INFO WorkerWebUI: Bound WorkerWebUI to 0.0.0.0, and started at http://192.168.1.87:8081
+16/08/23 02:34:58 INFO Worker: Connecting to master 192.168.1.84:7077...
+16/08/23 02:34:59 INFO TransportClientFactory: Successfully created connection to /192.168.1.84:7077 after 351 ms (0 ms spent in bootstraps)
+16/08/23 02:35:00 INFO Worker: Successfully registered with master spark://192.168.1.84:7077
 
 # LOCALLY on the board
 root@orangepione:~/spark# ./bin/spark-class org.apache.spark.deploy.worker.Worker spark://192.168.1.91:6066 --cores 4 --memory 800m &
@@ -630,9 +740,11 @@ $ ssh root@192.168.1.86 "cd spark ; ./bin/spark-class org.apache.spark.deploy.wo
 
 ### Submitting Spark Job
 
-From remote computer
+From remote computer (aster 192.168.1.88)
 
 ```shell
+
+# REMOTELY
 $  ssh root@192.168.1.88 "cd spark ; ./bin/spark-submit --class org.apache.spark.examples.SparkPi --master spark://192.168.1.88:7077 --deploy-mode cluster examples/jars/spark-examples_2.11-2.0.0.jar &"
 
 Running Spark using the REST application submission protocol.
@@ -640,12 +752,13 @@ Using Spark's default log4j profile: org/apache/spark/log4j-defaults.properties
 16/08/18 16:09:00 INFO RestSubmissionClient: Submitting a request to launch an application in spark://192.168.1.88:7077.
 ```
 
-from local master
+from local master (192.168.1.84)
 
 ```
-./bin/spark-submit --class org.apache.spark.examples.SparkPi --master spark://192.168.1.88:7077 --total-executor-cores 5 --deploy-mode cluster --supervise examples/jars/spark-examples_2.11-2.0.0.jar 1000 
+# LOCALLY 
+> spark $ ./bin/spark-submit --class org.apache.spark.examples.SparkPi --master spark://192.168.1.84:7077 --deploy-mode cluster ./examples/jars/spark-examples_2.11-2.0.0.jar
 
-./bin/spark-submit --class org.apache.spark.examples.JavaPageRank --master spark://192.168.1.88:7077 --total-executor-cores 5 --deploy-mode cluster --supervise examples/jars/spark-examples_2.11-2.0.0.jar 1000 
+./bin/spark-submit --class org.apache.spark.examples.JavaPageRank --master spark://192.168.1.84:7077 --total-executor-cores 5 --deploy-mode cluster --supervise ./examples/jars/spark-examples_2.11-2.0.0.jar 1000 
 
 ```
 
