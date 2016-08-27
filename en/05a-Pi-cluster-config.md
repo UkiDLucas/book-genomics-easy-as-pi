@@ -60,7 +60,7 @@ Finished erase on disk3
 Install the *.raw image on the SD card:
 
 ```shell
-> OrangePI $ sudo dd bs=1m of=/dev/disk3 if=Armbian_5.14_Orangepione_Debian_jessie_3.4.112.raw
+> OrangePI $ sudo dd bs=1m if=Armbian_5.14_Orangepione_Debian_jessie_3.4.112.raw of=/dev/disk3 
 Password:
 1498+0 records in
 1498+0 records out
@@ -586,6 +586,15 @@ C8585+0 records in
 
 
 
+## Upgrading The System
+
+```shell
+root@orangepione:~# apt-get update
+root@orangepione:~# apt-get upgrade
+```
+
+
+
 ## Running Spark
 
 
@@ -610,14 +619,13 @@ SPARK_DRIVER_MEMORY=256m
 
 ## Slave Worker
 
-$ cat conf/spark-env.sh
 PARK_MASTER_IP=192.168.1.86
 
 # use on 4 cores out of 4 for Workers
 SPARK_WORKER_CORES=4
-SPARK_WORKER_MEMORY=256m
-SPARK_EXECUTOR_MEMORY=256m
-SPARK_DRIVER_MEMORY=256m
+SPARK_WORKER_MEMORY=472m
+SPARK_EXECUTOR_MEMORY=472m
+SPARK_DRIVER_MEMORY=472m
 ```
 
 #### Configuring Hosts File
@@ -662,6 +670,12 @@ spark# ./sbin/stop-all.sh
 root@localhost's password: 
 localhost: no org.apache.spark.deploy.worker.Worker to stop
 stopping org.apache.spark.deploy.master.Master
+
+root@pi001 192.168.1.86 21:50 spark $ ./sbin/stop-master.sh
+no org.apache.spark.deploy.master.Master to stop
+
+spark $ ./sbin/stop-slave.sh
+stopping org.apache.spark.deploy.worker.Worker
 ```
 
 
@@ -679,7 +693,6 @@ stopping org.apache.spark.deploy.master.Master
 root@orangepione:~/spark# ./sbin/start-master.sh
 starting org.apache.spark.deploy.master.Master, logging to /root/spark/logs/spark-root-org.apache.spark.deploy.master.Master-1-orangepione.out
 
-
 ```
 
 
@@ -687,31 +700,7 @@ starting org.apache.spark.deploy.master.Master, logging to /root/spark/logs/spar
 #### Monitoring the Master logs
 
 ```shell
-root@orangepione:~/spark# tail -f /root/spark/logs/spark-root-org.apache.spark.deploy.master.Master-1-orangepione.out
-Spark Command: /usr/lib/jvm/java-8-openjdk-armhf/jre/bin/java -cp /root/spark/conf/:/root/spark/jars/* -Xmx1g org.apache.spark.deploy.master.Master --host orangepione --port 7077 --webui-port 8080
-========================================
-Using Spark's default log4j profile: org/apache/spark/log4j-defaults.properties
-16/08/18 23:59:26 INFO Master: Started daemon with process name: 1831@orangepione
-16/08/18 23:59:26 INFO SignalUtils: Registered signal handler for TERM
-16/08/18 23:59:26 INFO SignalUtils: Registered signal handler for HUP
-16/08/18 23:59:26 INFO SignalUtils: Registered signal handler for INT
-16/08/18 23:59:27 WARN Utils: Your hostname, orangepione resolves to a loopback address: 127.0.0.1; using 192.168.1.88 instead (on interface eth0)
-16/08/18 23:59:27 WARN Utils: Set SPARK_LOCAL_IP if you need to bind to another address
-16/08/18 23:59:36 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
-16/08/18 23:59:40 INFO SecurityManager: Changing view acls to: root
-16/08/18 23:59:40 INFO SecurityManager: Changing modify acls to: root
-16/08/18 23:59:40 INFO SecurityManager: Changing view acls groups to: 
-16/08/18 23:59:40 INFO SecurityManager: Changing modify acls groups to: 
-16/08/18 23:59:40 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users  with view permissions: Set(root); groups with view permissions: Set(); users  with modify permissions: Set(root); groups with modify permissions: Set()
-16/08/18 23:59:45 INFO Utils: Successfully started service 'sparkMaster' on port 7077.
-16/08/18 23:59:50 INFO Master: Starting Spark master at spark://orangepione:7077
-16/08/18 23:59:50 INFO Master: Running Spark version 2.0.0
-16/08/18 23:59:53 INFO Utils: Successfully started service 'MasterUI' on port 8080.
-16/08/18 23:59:53 INFO MasterWebUI: Bound MasterWebUI to 0.0.0.0, and started at http://192.168.1.88:8080
-16/08/18 23:59:53 INFO Utils: Successfully started service on port 6066.
-16/08/18 23:59:53 INFO StandaloneRestServer: Started REST server for submitting applications on port 6066
-16/08/18 23:59:58 INFO Master: I have been elected leader! New state: ALIVE
-16/08/19 00:00:04 INFO Master: Registering worker 192.168.1.88:49380 with 4 cores, 300.0 MB RAM
+root@pi001 192.168.1.86 21:37 logs $ tail -f spark-root-org.apache.spark.deploy.master.Master-1-pi001.out
 ```
 
 It takes a while, but MasterWebUI can be opened from your Mac/PC 
@@ -719,16 +708,7 @@ http://192.168.1.88:8080/
 
 #### Starting Workers
 
-**Spark Master at spark://192.168.1.84:7077**
 
-- **URL:** spark://192.168.1.84:7077
-- **REST URL:** spark://192.168.1.84:6066 (cluster mode)
-- **Alive Workers:** 4
-- **Cores in use:** 16 Total, 0 Used
-- **Memory in use:** 18.0 GB Total, 0.0 B Used
-- **Applications:** 0 [Running](http://192.168.1.84:8080/#running-app), 2 [Completed](http://192.168.1.84:8080/#completed-app)
-- **Drivers:** 0 Running, 2 Completed
-- **Status:** ALIVE
 
 ```shell
 root@pi003 192.168.1.87 20:35 spark $  ./sbin/start-slave.sh spark://192.168.1.86:7077 &
@@ -759,14 +739,32 @@ Using Spark's default log4j profile: org/apache/spark/log4j-defaults.properties
 16/08/18 16:09:00 INFO RestSubmissionClient: Submitting a request to launch an application in spark://192.168.1.88:7077.
 ```
 
-from local master (192.168.1.84)
+#### Submitting SparkPi Java example from script
 
 ```shell
-# LOCALLY 
-root@pi001 192.168.1.86 20:33 spark $ ./bin/spark-submit --class org.apache.spark.examples.SparkPi --master spark://192.168.1.86:7077 --deploy-mode cluster ./examples/jars/spark-examples_2.11-2.0.0.jar --executor-memory=256m 
+spark $ cat SparkPi.sh 
+#!/usr/bin/env bash
 
-./bin/spark-submit --class org.apache.spark.examples.JavaPageRank --master spark://192.168.1.84:7077 --total-executor-cores 5 --deploy-mode cluster --supervise ./examples/jars/spark-examples_2.11-2.0.0.jar 1000 
+exec ./bin/spark-submit \
+--class org.apache.spark.examples.SparkPi \
+--master spark://192.168.1.86:7077 \
+--deploy-mode cluster \
+./examples/jars/spark-examples_2.11-2.0.0.jar \
+--supervise \
+--total-executor-cores 7
+
+spark $ sh SparkPi.sh
 ```
+
+
+
+#### Not enough heap memory Error
+
+```shell
+Caused by: java.lang.IllegalArgumentException: System memory 259522560 must be at least 471859200. Please increase heap size using the --driver-memory option or spark.driver.memory in Spark configuration.
+```
+
+I have been receiving this error while running Spark with 256M on Pi cluster, after changing it to 472M the jobs started to execute fine.
 
 
 
