@@ -1,5 +1,9 @@
 ## OS image installation
 
+[TOC]
+
+
+
 ### Download newest OS
 
 http://www.armbian.com/orange-pi-one/
@@ -584,14 +588,41 @@ C8585+0 records in
 
 ## Running Spark
 
-### Configuration
+
+
+[TOC]
+
+### Spark Configuration
+
+#### Configuring Spark Enviroment
 
 ```shell
-> spark $ cat conf/spark-env.sh
-SPARK_MASTER_HOST=192.168.1.84
-# SPARK_WORKER_CORES
-> spark $ 
+## Master 
 
+spark/conf $ cat spark-env.sh 
+SPARK_MASTER_IP=192.168.1.86
+
+# use on 2 cores out of 4 for Workers
+SPARK_WORKER_CORES=2
+SPARK_WORKER_MEMORY=256m
+SPARK_EXECUTOR_MEMORY=256m
+SPARK_DRIVER_MEMORY=256m
+
+## Slave Worker
+
+$ cat conf/spark-env.sh
+PARK_MASTER_IP=192.168.1.86
+
+# use on 4 cores out of 4 for Workers
+SPARK_WORKER_CORES=4
+SPARK_WORKER_MEMORY=256m
+SPARK_EXECUTOR_MEMORY=256m
+SPARK_DRIVER_MEMORY=256m
+```
+
+#### Configuring Hosts File
+
+```shell
 $ cat /etc/hosts
 ##
 # Host Database
@@ -605,26 +636,44 @@ $ cat /etc/hosts
 ::1             	localhost 
 ```
 
+#### Configuring Slaves/Workers
+
+```shell
+spark/conf $ cat slaves 
+# A Spark Worker will be started on each of the machines listed below.
+localhost
+192.168.1.86
+192.168.1.87
+192.168.1.88
+```
+
+
+
 ### Running a Test App
 
 ```shell
 ./bin/run-example SparkPi 4 --cores 4 --memory 256M
 ```
 
+### Stopping Spark
 
-
-### Starting All (Master and Workers)
-
-```
+```shell
 spark# ./sbin/stop-all.sh
 root@localhost's password: 
 localhost: no org.apache.spark.deploy.worker.Worker to stop
 stopping org.apache.spark.deploy.master.Master
+```
+
+
+
+### Starting All (Master and Workers)
+
+```shell
 
 > spark $ ./sbin/start-all.sh
 ```
 
-### Starting Master
+#### Starting Master
 
 ```shell
 root@orangepione:~/spark# ./sbin/start-master.sh
@@ -635,7 +684,7 @@ starting org.apache.spark.deploy.master.Master, logging to /root/spark/logs/spar
 
 
 
-Monitoring the Master logs
+#### Monitoring the Master logs
 
 ```shell
 root@orangepione:~/spark# tail -f /root/spark/logs/spark-root-org.apache.spark.deploy.master.Master-1-orangepione.out
@@ -668,7 +717,7 @@ Using Spark's default log4j profile: org/apache/spark/log4j-defaults.properties
 It takes a while, but MasterWebUI can be opened from your Mac/PC 
 http://192.168.1.88:8080/
 
-### Starting Workers
+#### Starting Workers
 
 **Spark Master at spark://192.168.1.84:7077**
 
@@ -682,58 +731,16 @@ http://192.168.1.88:8080/
 - **Status:** ALIVE
 
 ```shell
-root@pi003:~# ./sbin/start-slave.sh spark://192.168.1.84:7077
+root@pi003 192.168.1.87 20:35 spark $  ./sbin/start-slave.sh spark://192.168.1.86:7077 &
 
 
+root@pi003 192.168.1.87 20:38 spark $ tail -f /root/spark/logs/spark-root-org.apache.spark.deploy.worker.Worker-1-pi003.out
 
--bash: ./sbin/start-slave.sh: No such file or directory
-root@pi003:~# cd spark/
-root@pi003:~/spark# ./sbin/start-slave.sh spark://192.168.1.84:7077
-starting org.apache.spark.deploy.worker.Worker, logging to /root/spark/logs/spark-root-org.apache.spark.deploy.worker.Worker-1-pi003.out
-root@pi003:~/spark# tail -f /root/spark/logs/spark-root-org.apache.spark.deploy.worker.Worker-1-pi003.out
-Spark Command: /usr/lib/jvm/java-8-openjdk-armhf/jre/bin/java -cp /root/spark/conf/:/root/spark/jars/* -Xmx1g org.apache.spark.deploy.worker.Worker --webui-port 8081 spark://192.168.1.84:7077
-========================================
-Using Spark's default log4j profile: org/apache/spark/log4j-defaults.properties
-16/08/23 02:34:32 INFO Worker: Started daemon with process name: 764@pi003
-16/08/23 02:34:32 INFO SignalUtils: Registered signal handler for TERM
-16/08/23 02:34:32 INFO SignalUtils: Registered signal handler for HUP
-16/08/23 02:34:32 INFO SignalUtils: Registered signal handler for INT
-16/08/23 02:34:42 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
-16/08/23 02:34:45 INFO SecurityManager: Changing view acls to: root
-16/08/23 02:34:45 INFO SecurityManager: Changing modify acls to: root
-16/08/23 02:34:45 INFO SecurityManager: Changing view acls groups to: 
-16/08/23 02:34:45 INFO SecurityManager: Changing modify acls groups to: 
-16/08/23 02:34:45 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users  with view permissions: Set(root); groups with view permissions: Set(); users  with modify permissions: Set(root); groups with modify permissions: Set()
-16/08/23 02:34:51 INFO Utils: Successfully started service 'sparkWorker' on port 48666.
-16/08/23 02:34:55 INFO Worker: Starting Spark worker 192.168.1.87:48666 with 4 cores, 1024.0 MB RAM
-16/08/23 02:34:55 INFO Worker: Running Spark version 2.0.0
-16/08/23 02:34:55 INFO Worker: Spark home: /root/spark
-16/08/23 02:34:58 INFO Utils: Successfully started service 'WorkerUI' on port 8081.
-16/08/23 02:34:58 INFO WorkerWebUI: Bound WorkerWebUI to 0.0.0.0, and started at http://192.168.1.87:8081
-16/08/23 02:34:58 INFO Worker: Connecting to master 192.168.1.84:7077...
-16/08/23 02:34:59 INFO TransportClientFactory: Successfully created connection to /192.168.1.84:7077 after 351 ms (0 ms spent in bootstraps)
-16/08/23 02:35:00 INFO Worker: Successfully registered with master spark://192.168.1.84:7077
-
-# LOCALLY on the board
-root@orangepione:~/spark# ./bin/spark-class org.apache.spark.deploy.worker.Worker spark://192.168.1.91:6066 --cores 4 --memory 800m &
-
-
-
-
-Options:
-  -c CORES, --cores CORES  Number of cores to use
-  -m MEM, --memory MEM     Amount of memory to use (e.g. 1000M, 2G)
-  -d DIR, --work-dir DIR   Directory to run apps in (default: SPARK_HOME/work)
-  -i HOST, --ip IP         Hostname to listen on (deprecated, please use --host or -h)
-  -h HOST, --host HOST     Hostname to listen on
-  -p PORT, --port PORT     Port to listen on (default: random)
-  --webui-port PORT        Port for web UI (default: 8081)
-  --properties-file FILE   Path to a custom Spark properties file.
-                           Default is conf/spark-defaults.conf.
-                           
-                           
-# REMOTELY from other computer
-$ ssh root@192.168.1.86 "cd spark ; ./bin/spark-class org.apache.spark.deploy.worker.Worker spark://192.168.1.90:6066 -m 512M &"
+16/08/26 20:38:59 INFO Worker: Starting Spark worker 192.168.1.87:53009 with 4 cores, 256.0 MB RAM
+...
+16/08/26 20:39:02 INFO Worker: Connecting to master 192.168.1.86:7077...
+...
+16/08/26 20:39:05 INFO Worker: Successfully registered with master spark://pi001:7077
 ```
 
 
@@ -754,12 +761,11 @@ Using Spark's default log4j profile: org/apache/spark/log4j-defaults.properties
 
 from local master (192.168.1.84)
 
-```
+```shell
 # LOCALLY 
-> spark $ ./bin/spark-submit --class org.apache.spark.examples.SparkPi --master spark://192.168.1.84:7077 --deploy-mode cluster ./examples/jars/spark-examples_2.11-2.0.0.jar
+root@pi001 192.168.1.86 20:33 spark $ ./bin/spark-submit --class org.apache.spark.examples.SparkPi --master spark://192.168.1.86:7077 --deploy-mode cluster ./examples/jars/spark-examples_2.11-2.0.0.jar --executor-memory=256m 
 
 ./bin/spark-submit --class org.apache.spark.examples.JavaPageRank --master spark://192.168.1.84:7077 --total-executor-cores 5 --deploy-mode cluster --supervise ./examples/jars/spark-examples_2.11-2.0.0.jar 1000 
-
 ```
 
 
