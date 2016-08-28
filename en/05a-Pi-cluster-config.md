@@ -255,34 +255,34 @@ Rootfs Extended. Please REBOOT to take effect
 
 
 
-### changing compute'r hostname
+### Changing Computer's HostName
 
 
 
 ```shell
-# Mac
+# on Mac
 > spark $ sudo scutil --set HostName uki
 
-# Debian 
-vi /etc/hostname
-
-
-192.168.1.84    spark_master
-127.0.0.1       localhost pi85
-...
-
-press ESC : wq
-reboot
-
+# on Debian / Armbian 
+# cat /etc/hostname
+pi004
 ```
 
 
 
 Adjusting Hosts file
 
-```
+```shell
 root@pi85:~/spark# vi  /etc/hosts
 
+
+
+127.0.0.1   localhost pi004
+::1         localhost pi004 ip6-localhost ip6-loopback
+fe00::0     ip6-localnet
+ff00::0     ip6-mcastprefix
+ff02::1     ip6-allnodes
+ff02::2     ip6-allrouters
 ```
 
 
@@ -608,14 +608,14 @@ root@orangepione:~# apt-get upgrade
 ```shell
 ## Master 
 
-spark/conf $ cat spark-env.sh 
+spark/conf $ vi spark-env.sh 
 SPARK_MASTER_IP=192.168.1.86
 
 # use on 2 cores out of 4 for Workers
 SPARK_WORKER_CORES=2
-SPARK_WORKER_MEMORY=256m
-SPARK_EXECUTOR_MEMORY=256m
-SPARK_DRIVER_MEMORY=256m
+SPARK_WORKER_MEMORY=472m
+SPARK_EXECUTOR_MEMORY=472m
+SPARK_DRIVER_MEMORY=472m
 
 ## Slave Worker
 
